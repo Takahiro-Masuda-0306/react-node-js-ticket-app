@@ -1,0 +1,18 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl: 
+    manifests:
+      - infra/k8s/*
+build:
+  local: 
+    push: false
+  artifacts:
+    - image: takabee0306/auth-depl
+      context: auth
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - dest: "src/**/*.ts"
+            src: .
