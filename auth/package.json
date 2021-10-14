@@ -19,7 +19,15 @@
     "express-validator": "^6.12.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.10",
+    "ts-jest": "^27.0.5",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/supertest": "^2.0.11",
+    "jest": "^27.2.5",
+    "mongodb-memory-server": "^7.4.3",
+    "supertest": "^6.1.6"
   }
 }

@@ -14,5 +14,13 @@ build:
         dockerfile: Dockerfile
       sync: 
         manual:
-          - dest: "src/**/*.ts"
-            src: .
+          - src: "src/**/*.ts"
+            dest: .
+    - image: takabee0306/client
+      context: client
+      docker: 
+        dockerfile: Dockerfile
+      sync: 
+        manual:
+          - src: "**/*.js"
+            dest: .
