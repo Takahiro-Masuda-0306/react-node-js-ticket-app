@@ -1,13 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import CookieSession from 'cookie-session';
 
 import { currentUserRouter } from './routes/current-user';
-import { signupRouter } from './routes/signup';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
-import { NotFoundError } from './errors/not-found-error';
+import { signupRouter } from './routes/signup';
 import { errorHandler } from './middleware/error-handler';
-import CookieSession from 'cookie-session';
+import { NotFoundError } from './errors/not-found-error';
 
 const app = express();
 app.set('trust proxy', true);
@@ -18,12 +18,12 @@ app.use(CookieSession({
 }))
 
 app.use(currentUserRouter);
-app.use(signupRouter);
 app.use(signinRouter);
 app.use(signoutRouter);
+app.use(signupRouter);
 
-app.get('*', async (req, res, next) => {
-  next(new NotFoundError());
+app.all('*', async (req, res) => {
+  throw new NotFoundError();
 })
 
 app.use(errorHandler);
