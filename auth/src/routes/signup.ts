@@ -4,8 +4,7 @@ import jwt from 'jsonwebtoken';
 
 import { User } from '../models/user';
 
-import { ValidateRequest } from '../middleware/validate-request';
-import { BadRequestError } from '../errors/bad-request-error';
+import { ValidateRequest, BadRequestError } from '@tamatickets/common';
 
 const router = express.Router();
 
