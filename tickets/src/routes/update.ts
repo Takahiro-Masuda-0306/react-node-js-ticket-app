@@ -7,11 +7,13 @@ import {
   ValidateRequest,
 } from "@tamatickets/common";
 import { Tickets } from "../models/tickets";
+import { TicketUpdatedPublisher } from "../../events/publishers/ticket-updated-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
 router.put(
-  "/api/tickets/:id",
+  "/api/tickets/:id", 
   [
     body("title").not().isEmpty().withMessage("Title is required"),
     body("price")
@@ -37,6 +39,12 @@ router.put(
     });
 
     await ticket.save();
+    new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+    })
 
     res.send(ticket);
   }

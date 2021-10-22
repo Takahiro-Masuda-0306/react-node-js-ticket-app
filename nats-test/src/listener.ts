@@ -1,6 +1,6 @@
 import nats from "node-nats-streaming";
 import { randomBytes } from "crypto";
-import { TicketCreatedListener } from './events/tickets-created-listener';
+import { TicketCreatedListener } from "./events/tickets-created-listener";
 
 console.clear();
 
@@ -10,14 +10,14 @@ const stan = nats.connect("ticket-app", randomBytes(4).toString("hex"), {
 
 stan.on("connect", () => {
   console.log("Listener connected to NATS");
-  
-  stan.on('close', () => {
-    console.log('NATS connection closed!');
+
+  stan.on("close", () => {
+    console.log("NATS connection closed!");
     process.exit();
-  })
-  
+  });
+
   new TicketCreatedListener(stan).listen();
 });
 
-process.on('SIGINT', () => stan.close());
-process.on('SIGTERM', () => stan.close());
+process.on("SIGINT", () => stan.close());
+process.on("SIGTERM", () => stan.close());
