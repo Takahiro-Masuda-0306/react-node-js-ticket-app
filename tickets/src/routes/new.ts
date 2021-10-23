@@ -5,7 +5,7 @@ import { Tickets } from "../models/tickets";
 import { requireAuth, ValidateRequest } from "@tamatickets/common";
 
 import { natsWrapper } from "../nats-wrapper";
-import { TicketCreatePublisher } from "../../events/publishers/ticket-created-publisher";
+import { TicketCreatePublisher } from "../events/publishers/ticket-created-publisher";
 
 const router = express.Router();
 
@@ -33,6 +33,7 @@ router.post(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
+      version: ticket.version
     });
     res.status(201).send(ticket);
   }

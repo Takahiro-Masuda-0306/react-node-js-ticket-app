@@ -5,9 +5,10 @@ import {
   requireAuth,
   NotAuthorizedError,
   ValidateRequest,
+  BadRequestError,
 } from "@tamatickets/common";
 import { Tickets } from "../models/tickets";
-import { TicketUpdatedPublisher } from "../../events/publishers/ticket-updated-publisher";
+import { TicketUpdatedPublisher } from "../events/publishers/ticket-updated-publisher";
 import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
@@ -29,6 +30,10 @@ router.put(
       throw new NotFoundError();
     }
 
+    if(ticket.orderId) {
+      throw new BadRequestError('cannot edit a reserved ticket');
+    }
+
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
     }
@@ -44,7 +49,8 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId: ticket.userId,
-    })
+      version: ticket.version
+    });
 
     res.send(ticket);
   }
