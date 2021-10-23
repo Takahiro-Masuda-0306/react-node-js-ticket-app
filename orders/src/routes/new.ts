@@ -10,6 +10,8 @@ import {
 import { body } from "express-validator";
 import { Ticket } from "../models/ticket";
 import { Order } from "../models/order";
+import { OrderCreatedPublisher } from "../events/publishers/order-created-publishers";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
@@ -28,7 +30,7 @@ router.post(
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
 
-    const ticket = await Ticket.findById(ticketId);
+    const ticket = await Ticket.findById(ticketId).populate('ticket');
     if (!ticket) {
       throw new NotFoundError();
     }
@@ -44,12 +46,21 @@ router.post(
     const order = Order.build({
       userId: req.currentUser!.id,
       status: OrderStatus.Created,
-      expiredAt: expiration,
+      expiresAt: expiration,
       ticket
     });
     await order.save();
 
-    
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiredAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price
+      }
+    });
 
     res.status(200).send(order);
   }
