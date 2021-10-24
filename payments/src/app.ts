@@ -2,11 +2,8 @@ import express from 'express';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
 
-import { indexTicketsRouter } from './routes';
-import { createTicketsRouter } from './routes/new';
-import { showTicketsRouter } from './routes/show';
-import { updateTicketsRouter } from './routes/update';
 import { errorHandler, NotFoundError, currentUser } from '@tamatickets/common';
+import { createChargeRouter } from './routes/new';
 
 const app = express();
 app.set('trust proxy', true);
@@ -19,10 +16,7 @@ app.use(
 );
 app.use(currentUser);
 
-app.use(createTicketsRouter);
-app.use(showTicketsRouter);
-app.use(updateTicketsRouter);
-app.use(indexTicketsRouter);
+app.use(createChargeRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
