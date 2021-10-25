@@ -8,7 +8,12 @@ const router = express.Router();
 router.get("/api/tickets", 
 requireAuth, 
 async (req: Request, res: Response) => {
-  const tickets = await Tickets.find({});
+  const tickets = await Tickets.find({
+    orderId: undefined
+  });
+
+  console.log('tickets data is :: ' + tickets)
+
 
   res.send(tickets);
 });
