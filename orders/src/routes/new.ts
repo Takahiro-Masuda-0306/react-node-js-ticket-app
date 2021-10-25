@@ -46,18 +46,18 @@ router.post(
     
     const order = Order.build({
       userId: req.currentUser!.id,
-      status: OrderStatus.Created,
+      status: OrderStatus.Complete,
       expiresAt: expiration,
       ticket,
     });
-    await order.save();
+    await order.save(); 
 
     new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order.id,
       version: order.version,
       status: order.status,
       userId: order.userId,
-      expiresAt: expiration.toISOString(),
+      expiresAt: order.expiresAt.toISOString(),
       ticket: {
         id: ticket.id,
         price: ticket.price,
