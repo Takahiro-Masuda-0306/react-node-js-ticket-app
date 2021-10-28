@@ -15,5 +15,5 @@ it("clear the cookie after signing out", async () => {
     .send({})
     .expect(200);
 
-  console.log(response.get("Set-Cookie"));
+  expect(response.get("Set-Cookie")).not.toBeDefined();
 });
